@@ -402,3 +402,36 @@ fun main() {
     println("Panel width: ${panel.getWidth()}")
 }
 ```
+
+
+## Member Functions
+
+```kotlin
+object Rectangle {
+    fun printArea(width: Int, height: Int): Unit {
+        val area = calculateArea(width, height)
+        println("The area is $area")
+    }
+    
+    fun calculateArea(width: Int, height: Int): Int {
+        return width * height
+    }
+}
+
+fun main() {
+    Rectangle.printArea(10, 20)
+}
+```
+
+
+## Top-level functions
+
+```kotlin
+fun foo(k: Int) {
+    require(k > 10, { "k should be greater than 10"})
+}
+
+fun main() {
+    foo(1)
+}
+```
