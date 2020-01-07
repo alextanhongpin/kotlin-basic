@@ -156,7 +156,7 @@ fun main() {
 ```kotlin
 fun main() {
     val year = 2018
-	  val thisYear = if (year === 2018) "yes" else "nope"
+    val thisYear = if (year === 2018) "yes" else "nope"
     println(thisYear)
 }
 ```
@@ -175,22 +175,6 @@ fun main() {
     
     // If the string is null, then return the length as 0.
     println(str?.length ?: 0)
-}
-```
-
-## Smart Casts
-
-```kotlin
-fun main() {
-    println(getStringLength("hello world"))
-    println(getStringLength(1))
-}
-
-fun getStringLength(a: Any): Int? {
-    	if (a is String) {
-            return a.length
-        }
-        return null
 }
 ```
 
@@ -241,5 +225,180 @@ fun main() {
         if (it == 3) return@forEach
     }
     println("done")
+}
+```
+
+## Casting Type
+```kotlin
+fun isString(any: Any): Boolean =
+    if (any is String) true else false
+
+fun isEmptyString(any: Any): Boolean =
+    any is String && any.length == 0
+
+fun main() {
+    println(isString(1))	
+    println(isString("hello world"))
+    println(isEmptyString(""))
+    println(isEmptyString(1))
+}
+```
+
+## When
+
+```kotlin
+fun whatNumber(x: Int) =
+    when (x) {
+        0 -> println("x is zero")
+        1 -> println("x is one")
+        else -> println("x is neither 0 or 1")
+    }
+    
+fun isMinOrMax(x: Int): Boolean =
+    when (x) {
+        Int.MIN_VALUE -> true
+        Int.MAX_VALUE -> true
+        else -> false
+    }
+
+fun isZeroOrOne(x: Int): Boolean =
+    when (x) {
+        0, 1 -> true
+        else -> false
+    }
+    
+fun isAbs(x: Int): Boolean =
+    when (x) {
+        Math.abs(x) -> true
+		else -> false
+    }
+
+fun isSingleDigit(x: Int): Boolean =
+	when (x) {
+        in -9..9 -> true
+        else -> false
+    }
+
+fun isDieNumber(x: int): Boolean =
+    when (x) {
+        in 1..6 -> true
+        else -> false
+    }
+    
+fun whenWithoutArgs(x: Int, y: Int) =
+    when {
+        x < y -> println("x is less than y")
+        x > y -> println("x is more than y")
+        else -> println("x must equal y")
+    }
+
+fun main() {
+   whatNumber(1)
+   println(isMinOrMax(1))
+   println(isZeroOrOne(1))
+   println(isAbs(-1))
+   println(isSingleDigit(100))
+   println(isDieNumber(5))
+   whenWithoutArgs(10, 4)
+}
+```
+
+
+## Looping
+
+```kotlin
+fun printExceptStop() {
+    val list = listOf("a", "b", "stop", "c")
+    list.forEach stop@ {
+        if (it == "stop") return@stop
+        else println(it)
+    }
+}
+
+fun printUntilStop() {
+    val list = listOf("a", "b", "stop", "c")
+    run loop@ {
+        list.forEach {
+            if (it == "stop") return@loop
+            println(it)
+        }
+    }
+}
+
+fun main() {
+    printExceptStop()
+    printUntilStop()
+}
+```
+
+## Nested Class
+
+```kotlin
+Nested class
+
+class A {
+    private val someField: Int = 1
+    inner class B {
+        private val someField: Int = 2
+        fun foo() {
+            println("Field from B: ${this.someField}")
+            println("Field from B: ${this@B.someField}")
+            println("Field from A: ${this@A.someField}")
+        } 
+    }
+}
+
+fun main() {
+	A().B().foo()   
+}
+```
+
+## Multiple Interfaces
+
+```kotlin
+interface Drivable {
+    fun drive()
+}
+
+interface Sailable {
+    fun saill()
+}
+
+class AmphibiousCar(val name: String) : Drivable, Sailable {
+    override fun drive() {
+        println("driving")
+    }
+    
+    override fun saill() {
+        println("sailling")
+    }
+}
+
+fun main() {
+    val car = AmphibiousCar("proton")
+    car.drive()
+    car.saill()
+}
+```
+
+
+## Composition
+```kotlin
+interface UIElement {
+    fun getHeight(): Int
+    fun getWidth(): Int
+}
+
+class Rectangle(val x1: Int, val x2: Int, val y1: Int, val y2: Int): UIElement {
+    override fun getHeight() = y2 - y1
+    override fun getWidth() = x2 - x1
+}
+
+class Panel(val rectangle: Rectangle) : UIElement by rectangle
+
+fun main() {
+    val panel = Panel(Rectangle(10, 100, 30, 100))
+    println("Panel height: ${panel.getHeight()}")
+    println("Panel width: ${panel.getWidth()}")
 }
 ```
