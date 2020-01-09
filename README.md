@@ -435,3 +435,212 @@ fun main() {
     foo(1)
 }
 ```
+
+## Pair
+
+```kotlin
+class Roots(pos: Double, neg: Double)
+
+fun roots(k: Int): Array<Double> {
+    require(k >= 0)
+    val root = Math.sqrt(k.toDouble())
+    return arrayOf(root, -root)
+}
+
+fun roots2(k: Int): Roots {
+    require(k >= 0)
+    val root = Math.sqrt(k.toDouble())
+    return Roots(root, -root)
+}
+
+fun roots3(k: Int): Pair<Double, Double> {
+    require(k >= 0)
+    val root = Math.sqrt(k.toDouble())
+    return Pair(root, -root)
+}
+
+fun main() {
+    println(roots(10))
+    println(roots2(10))
+    val (pos, neg) = roots3(10)
+    println("$pos, $neg")
+}
+```
+
+## Infix
+
+```kotlin
+class InfixAccount {
+    var balance = 0.0
+    
+    infix fun add(amount: Double): Unit {
+        this.balance = balance + amount
+    }
+}
+
+fun main() {
+    val account = InfixAccount()
+    account add 200.0
+    println(account.balance)
+}
+```
+
+
+## Operator overloading
+
+
+```kotlin
+class Matrix(val a: Int, val b: Int, val c: Int, val d: Int) {
+    operator fun plus(matrix: Matrix): Matrix {
+        return Matrix(a + matrix.a,
+                      b + matrix.b,
+                      c + matrix.c,
+                      d + matrix.d)
+    }
+}
+
+fun main() {
+    val m1 = Matrix(1, 2, 3, 4)
+    val m2 = Matrix(5, 6, 7, 8)
+    val m3 = m1 + m2
+    println("${m3.a}, ${m3.b}, ${m3.c}, ${m3.d}")
+}
+```
+
+## Get/Set operator
+
+```kotlin
+enum class Piece {
+    Empty, Pawn, Bishop, Knight, Rook, Queen, King
+}
+
+class ChessBoard {
+    private val board = Array<Piece>(64, { Piece.Empty })
+    operator fun get(rank: Int, file: Int): Piece = board[file * 8 + rank]
+    operator fun set(rank: Int, file: Int, value: Piece): Unit {
+        board[file * 8 + rank] = value
+    }
+}
+
+fun main() {
+    val board = ChessBoard()
+    board[0, 4] = Piece.Queen
+    println(board[0, 4])
+}
+```
+
+## Invoke
+
+Invoke makes a class itself looks like a function.
+```kotlin
+import kotlin.random.Random
+
+class RandomLongs(seed: Long) {
+    private val random = Random(seed)
+    operator fun invoke(): Long = random.nextLong()
+}
+
+fun main() {
+    val random = RandomLongs(1000)
+    println(random())
+}
+```
+
+```kotlin
+class Min {
+    operator fun invoke(a: Int, b: Int): Int = if (a <= b) a else b
+    operator fun invoke(a: Int, b: Int, c: Int): Int = invoke(invoke(a, b), c)
+    operator fun invoke(a: Int, b: Int, c: Int, d: Int) = invoke(invoke(a, b), invoke(c, d))
+}
+
+fun main() {
+    val min = Min()
+    println(min(1, 2))
+    println(min(1, 2, 3))
+    println(min(1, 2, 3, 4))
+}
+```
+
+## Comparison
+
+```kotlin
+class BingoNumber(val name: String, val age: Int) {
+    operator fun compareTo(other: BingoNumber) = 
+    	when {
+            age > other.age -> 1
+            age < other.age -> -1
+            else -> 0
+        }
+}
+
+fun main() {
+    val a = BingoNumber("john", 10)
+    val b = BingoNumber("doe", 20)
+    println(a > b)
+    println(a < b)
+}
+```
+
+# Function literal
+
+fun main() {
+    val printMessage = { message: String -> println(message)}
+    printMessage("good day")
+}
+
+
+## Varargs
+```kotlin
+fun multiprint(vararg strings: String) {
+    for (string in strings) {
+        println(string)
+    }
+}
+
+fun multiprint2(prefix: String, vararg strings: String, suffix: String) {
+    println(prefix)
+   	for (string in strings) {
+        println(string)
+    }
+    println(suffix)
+}
+
+fun main() {
+    multiprint("a", "b", "c")
+    multiprint2("prefix", "a", "b", "c", suffix = "suffix")
+    
+    val strings = arrayOf("a", "b", "c")
+    multiprint2("prefix", *strings, suffix = "suffix")
+}
+```
+
+## Extension 
+
+```kotlin
+class Submarine {
+    fun fire(): Unit {
+        println("Firing torpedos")
+    }
+    
+    fun submerge(): Unit {
+        println("Submerging")
+    }
+}
+
+
+fun Submarine.fire(): Unit {
+    println("Fire on board!")
+}
+
+fun Submarine.submerge(depth: Int): Unit {
+    println("Submerging from $depth meter.")
+}
+
+fun main() {
+    val submarine = Submarine()
+    submarine.fire()
+    
+    submarine.submerge()
+    submarine.submerge(10)
+}
+```
