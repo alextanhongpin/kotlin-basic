@@ -644,3 +644,57 @@ fun main() {
     submarine.submerge(10)
 }
 ```
+
+
+## Generics
+```kotlin
+fun <T> printRepeated(t: T, n: Int): Unit {
+    for (i in 0..n) {
+        println(t)
+    }
+}
+
+fun main() {
+    printRepeated("a", 10)
+    printRepeated(100, 10)
+}
+```
+
+## Higher order functions
+
+```kotlin
+fun foo(str: String, fn: (String) -> String): Unit {
+    val applied = fn(str)
+    println(applied)
+}
+
+fun bar(): (String) -> String = { str -> str.reversed() }
+
+fun main() {
+    foo("hello world", { it.reversed() })
+    foo("hello world", { it.toUpperCase() })
+    foo("hello world", { it.capitalize() })
+    
+    val reversi = bar()
+    println(reversi("hello world"))
+}
+```
+
+
+## Function Assignment
+
+```kotlin
+fun main() {
+    val isEven: (Int) -> Boolean = { it % 2 == 0 }
+    println(listOf(1, 2, 3, 4).filter(isEven))
+}
+```
+
+## Function Reference
+
+```kotlin
+fun isEven(n: Int): Boolean = n % 2 == 0
+fun main() {
+    println(listOf(1, 2, 3, 4).filter(::isEven))
+}
+```
