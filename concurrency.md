@@ -1,3 +1,81 @@
+## Basic Threads
+
+```kotlin
+import kotlin.concurrent.thread
+import java.lang.Thread
+
+fun main() {
+    val t = thread(start=false, name="mythread") {
+        var i = 0
+        while (i < 10) {
+            i += 1
+            println("running on the thread: $i")
+        }
+    }
+    println("starting thread")
+    t.start()
+	Thread.sleep(1000)
+    println("ending")
+}
+```
+
+
+```kotlin
+import java.lang.Thread
+import java.lang.Runnable
+import kotlin.concurrent.thread
+
+// Extending the Thread class - not recommended due to Kotlin not supporting multiple inheritance.
+class SimpleThread: Thread() {
+    public override fun run() {
+        println("${Thread.currentThread()} has run.")
+    }
+}
+
+
+// Implementing Runnable interface.
+class SimpleRunnable: Runnable {
+    public override fun run() {
+        println("${Thread.currentThread()} has run.")
+    }
+}
+
+
+fun main() {
+    val simpleThread = SimpleThread()
+    simpleThread.start()
+    
+    val threadWithRunnable = Thread(SimpleRunnable())
+    threadWithRunnable.start()
+    
+    val threadSam = Thread {
+        println("${Thread.currentThread()} has run.")
+    }
+    threadSam.start()
+    
+    val kThread = thread(start = false) {
+        println("${Thread.currentThread()} has run.")
+    }
+    kThread.start()
+    
+    Thread.sleep(1000)
+    println("terminating")
+}
+```
+## Coroutines basic
+
+```kotlin
+import kotlinx.coroutines.*
+
+fun main() {
+    runBlocking {
+        val job = launch(Dispatchers.Default) {  
+            println("${Thread.currentThread()} has run.") 
+        }
+    }
+}
+```
+
 ## Threads
 
 ```kotlin
